@@ -30,6 +30,7 @@ func GetRestaurant(appCtx component.AppContext) gin.HandlerFunc {
 			panic(err)
 			return
 		}
+		// test
 
 		c.JSON(http.StatusOK, common.SimpleSuccessResponse(result))
 
