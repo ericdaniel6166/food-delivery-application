@@ -5,23 +5,17 @@ import (
 	"food-delivery-application/middleware"
 	"food-delivery-application/restaurant/restauranttransport/ginrestaurant"
 	"github.com/gin-gonic/gin"
-	"gorm.io/driver/mysql"
+	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"log"
 	"net/http"
 	"os"
 )
 
-type Note struct {
-	Id      int    `json:"id,omitempty" gorm:"column:id;"`
-	Title   string `json:"title" gorm:"column:title;"`
-	Content string `json:"content" gorm:"column:content;"`
-}
-
 func main() {
 	dbConStr := os.Getenv("DBConnectionStr")
 
-	db, err := gorm.Open(mysql.Open(dbConStr), &gorm.Config{})
+	db, err := gorm.Open(postgres.Open(dbConStr), &gorm.Config{})
 
 	if err != nil {
 		log.Fatalln(err)
