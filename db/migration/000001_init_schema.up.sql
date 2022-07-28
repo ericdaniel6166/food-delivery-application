@@ -1,8 +1,7 @@
 BEGIN;
 
-drop table if exists restaurants;
+create table if not exists restaurants
 
-create table restaurants
 (
     id                  serial       not null
         constraint restaurants_pkey
