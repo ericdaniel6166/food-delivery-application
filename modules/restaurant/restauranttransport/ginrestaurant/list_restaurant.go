@@ -5,7 +5,9 @@ import (
 	"food-delivery-application/component"
 	"food-delivery-application/modules/restaurant/restaurantbiz"
 	"food-delivery-application/modules/restaurant/restaurantmodel"
+	"food-delivery-application/modules/restaurant/restaurantrepo"
 	"food-delivery-application/modules/restaurant/restaurantstorage"
+	"food-delivery-application/modules/restaurantlike/restaurantlikestorage"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
@@ -44,7 +46,9 @@ func ListRestaurant(appCtx component.AppContext) gin.HandlerFunc {
 		order.Fulfill()
 
 		store := restaurantstorage.NewSQLStore(appCtx.GetMainDBConnection())
-		biz := restaurantbiz.NewListRestaurantBiz(store)
+		likeStore := restaurantlikestorage.NewSQLStore(appCtx.GetMainDBConnection())
+		repo := restaurantrepo.NewListRestaurantRepo(store, likeStore)
+		biz := restaurantbiz.NewListRestaurantBiz(repo)
 
 		result, err := biz.ListRestaurant(c.Request.Context(), &filter, &paging, &order)
 		if err != nil {
@@ -52,6 +56,14 @@ func ListRestaurant(appCtx component.AppContext) gin.HandlerFunc {
 				"err": err.Error(),
 			})
 			return
+		}
+
+		for i := range result {
+			result[i].Mask(false)
+
+			if i == len(result)-1 {
+				paging.NextCursor = result[i].FakeId.String()
+			}
 		}
 
 		c.JSON(http.StatusOK, common.NewSuccessResponse(result, paging, filter))
