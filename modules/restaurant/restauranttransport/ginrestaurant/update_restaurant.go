@@ -8,12 +8,12 @@ import (
 	"food-delivery-application/modules/restaurant/restaurantstorage"
 	"github.com/gin-gonic/gin"
 	"net/http"
-	"strconv"
 )
 
 func UpdateRestaurant(appCtx component.AppContext) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		id, err := strconv.Atoi(c.Param("id"))
+
+		uid, err := common.FromBase58(c.Param("id"))
 
 		if err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{
@@ -35,7 +35,7 @@ func UpdateRestaurant(appCtx component.AppContext) gin.HandlerFunc {
 			return
 		}
 
-		if err := biz.UpdateRestaurant(c.Request.Context(), id, &data); err != nil {
+		if err := biz.UpdateRestaurant(c.Request.Context(), int(uid.GetLocalID()), &data); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{
 				"err": err.Error(),
 			})
