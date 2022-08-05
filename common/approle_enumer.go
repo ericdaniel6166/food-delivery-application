@@ -20,14 +20,14 @@ var (
 	_AppRoleIndex_1 = [...]uint8{0, 5}
 )
 
-func (i AppRole) String() string {
+func (appRole AppRole) String() string {
 	switch {
-	case 0 <= i && i <= 2:
-		return _AppRoleName_0[_AppRoleIndex_0[i]:_AppRoleIndex_0[i+1]]
-	case i == 4:
+	case 0 <= appRole && appRole <= 2:
+		return _AppRoleName_0[_AppRoleIndex_0[appRole]:_AppRoleIndex_0[appRole+1]]
+	case appRole == 4:
 		return _AppRoleName_1
 	default:
-		return fmt.Sprintf("AppRole(%d)", i)
+		return fmt.Sprintf("AppRole(%d)", appRole)
 	}
 }
 
@@ -87,9 +87,9 @@ func AppRoleStrings() []string {
 }
 
 // IsAAppRole returns "true" if the value is listed in the enum definition. "false" otherwise
-func (i AppRole) IsAAppRole() bool {
+func (appRole AppRole) IsAAppRole() bool {
 	for _, v := range _AppRoleValues {
-		if i == v {
+		if appRole == v {
 			return true
 		}
 	}
@@ -97,18 +97,18 @@ func (i AppRole) IsAAppRole() bool {
 }
 
 // MarshalJSON implements the json.Marshaler interface for AppRole
-func (i AppRole) MarshalJSON() ([]byte, error) {
-	return json.Marshal(i.String())
+func (appRole AppRole) MarshalJSON() ([]byte, error) {
+	return json.Marshal(appRole.String())
 }
 
 // UnmarshalJSON implements the json.Unmarshaler interface for AppRole
-func (i *AppRole) UnmarshalJSON(data []byte) error {
+func (appRole *AppRole) UnmarshalJSON(data []byte) error {
 	var s string
 	if err := json.Unmarshal(data, &s); err != nil {
 		return fmt.Errorf("AppRole should be a string, got %s", data)
 	}
 
 	var err error
-	*i, err = AppRoleString(s)
+	*appRole, err = AppRoleString(s)
 	return err
 }
