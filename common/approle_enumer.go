@@ -9,26 +9,25 @@ import (
 )
 
 const (
-	_AppRoleName_0      = "UserShipper"
-	_AppRoleLowerName_0 = "usershipper"
+	_AppRoleName_0      = "AnonymousUserShipper"
+	_AppRoleLowerName_0 = "anonymoususershipper"
 	_AppRoleName_1      = "Admin"
 	_AppRoleLowerName_1 = "admin"
 )
 
 var (
-	_AppRoleIndex_0 = [...]uint8{0, 4, 11}
+	_AppRoleIndex_0 = [...]uint8{0, 9, 13, 20}
 	_AppRoleIndex_1 = [...]uint8{0, 5}
 )
 
-func (i AppRole) String() string {
+func (appRole AppRole) String() string {
 	switch {
-	case 1 <= i && i <= 2:
-		i -= 1
-		return _AppRoleName_0[_AppRoleIndex_0[i]:_AppRoleIndex_0[i+1]]
-	case i == 4:
+	case 0 <= appRole && appRole <= 2:
+		return _AppRoleName_0[_AppRoleIndex_0[appRole]:_AppRoleIndex_0[appRole+1]]
+	case appRole == 4:
 		return _AppRoleName_1
 	default:
-		return fmt.Sprintf("AppRole(%d)", i)
+		return fmt.Sprintf("AppRole(%d)", appRole)
 	}
 }
 
@@ -36,25 +35,29 @@ func (i AppRole) String() string {
 // Re-run the stringer command to generate them again.
 func _AppRoleNoOp() {
 	var x [1]struct{}
+	_ = x[Anonymous-(0)]
 	_ = x[User-(1)]
 	_ = x[Shipper-(2)]
 	_ = x[Admin-(4)]
 }
 
-var _AppRoleValues = []AppRole{User, Shipper, Admin}
+var _AppRoleValues = []AppRole{Anonymous, User, Shipper, Admin}
 
 var _AppRoleNameToValueMap = map[string]AppRole{
-	_AppRoleName_0[0:4]:       User,
-	_AppRoleLowerName_0[0:4]:  User,
-	_AppRoleName_0[4:11]:      Shipper,
-	_AppRoleLowerName_0[4:11]: Shipper,
-	_AppRoleName_1[0:5]:       Admin,
-	_AppRoleLowerName_1[0:5]:  Admin,
+	_AppRoleName_0[0:9]:        Anonymous,
+	_AppRoleLowerName_0[0:9]:   Anonymous,
+	_AppRoleName_0[9:13]:       User,
+	_AppRoleLowerName_0[9:13]:  User,
+	_AppRoleName_0[13:20]:      Shipper,
+	_AppRoleLowerName_0[13:20]: Shipper,
+	_AppRoleName_1[0:5]:        Admin,
+	_AppRoleLowerName_1[0:5]:   Admin,
 }
 
 var _AppRoleNames = []string{
-	_AppRoleName_0[0:4],
-	_AppRoleName_0[4:11],
+	_AppRoleName_0[0:9],
+	_AppRoleName_0[9:13],
+	_AppRoleName_0[13:20],
 	_AppRoleName_1[0:5],
 }
 
@@ -84,9 +87,9 @@ func AppRoleStrings() []string {
 }
 
 // IsAAppRole returns "true" if the value is listed in the enum definition. "false" otherwise
-func (i AppRole) IsAAppRole() bool {
+func (appRole AppRole) IsAAppRole() bool {
 	for _, v := range _AppRoleValues {
-		if i == v {
+		if appRole == v {
 			return true
 		}
 	}
@@ -94,18 +97,18 @@ func (i AppRole) IsAAppRole() bool {
 }
 
 // MarshalJSON implements the json.Marshaler interface for AppRole
-func (i AppRole) MarshalJSON() ([]byte, error) {
-	return json.Marshal(i.String())
+func (appRole AppRole) MarshalJSON() ([]byte, error) {
+	return json.Marshal(appRole.String())
 }
 
 // UnmarshalJSON implements the json.Unmarshaler interface for AppRole
-func (i *AppRole) UnmarshalJSON(data []byte) error {
+func (appRole *AppRole) UnmarshalJSON(data []byte) error {
 	var s string
 	if err := json.Unmarshal(data, &s); err != nil {
 		return fmt.Errorf("AppRole should be a string, got %s", data)
 	}
 
 	var err error
-	*i, err = AppRoleString(s)
+	*appRole, err = AppRoleString(s)
 	return err
 }
