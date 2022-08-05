@@ -6,12 +6,14 @@ import (
 	"food-delivery-application/middleware"
 	"food-delivery-application/modules/restaurant/restauranttransport/ginrestaurant"
 	"food-delivery-application/modules/upload/uploadtransport/ginupload"
+	"food-delivery-application/modules/user/usertransport/ginuser"
 	"github.com/gin-gonic/gin"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"log"
 	"net/http"
 	"os"
+	"strconv"
 )
 
 func main() {
@@ -22,7 +24,9 @@ func main() {
 	s3APIKey := os.Getenv("S3APIKey")
 	s3SecretKey := os.Getenv("S3SecretKey")
 	s3Domain := os.Getenv("S3Domain")
-	// secretKey := os.Getenv("SYSTEM_SECRET")
+	secretKey := os.Getenv("SystemSecretKey")
+	version := os.Getenv("Version")
+	jwtExpirationInSeconds, _ := strconv.Atoi(os.Getenv("JwtExpirationInSeconds"))
 
 	s3Provider := uploadprovider.NewS3Provider(s3BucketName, s3Region, s3APIKey, s3SecretKey, s3Domain)
 
@@ -32,30 +36,41 @@ func main() {
 		log.Fatalln(err)
 	}
 
-	if err := runService(db, s3Provider); err != nil {
-		//if err := runService(db); err != nil {
-		log.Fatalln(err)
+	appCtx := component.NewAppContext(db, s3Provider, secretKey, version, jwtExpirationInSeconds)
 
+	if err := runService(appCtx); err != nil {
+		log.Fatalln(err)
 	}
 }
 
-func runService(db *gorm.DB, s3Provider uploadprovider.UploadProvider) error {
-	//func runService(db *gorm.DB) error {
+func runService(appCtx component.AppContext) error {
 	r := gin.Default()
-	appCtx := component.NewAppContext(db, s3Provider)
-	//appCtx := component.NewAppContext(db)
 
 	r.Use(middleware.Recover(appCtx))
 
-	r.GET("/ping", func(c *gin.Context) {
+	v := r.Group(appCtx.Version())
+
+	v.GET("/ping", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
 			"message": "pong",
 		})
 	})
 
-	r.POST("/upload", ginupload.Upload(appCtx))
+	v.POST("/upload", ginupload.Upload(appCtx))
 
-	restaurants := r.Group("/restaurants")
+	auth := v.Group("/auth")
+	{
+		auth.POST("/register", ginuser.Register(appCtx))
+
+		auth.POST("/login", ginuser.Login(appCtx))
+	}
+
+	user := v.Group("/user", middleware.RequiredAuth(appCtx))
+	{
+		user.GET("/profile", ginuser.GetProfile(appCtx))
+	}
+
+	restaurants := v.Group("/restaurants", middleware.RequiredAuth(appCtx))
 	{
 		restaurants.POST("", ginrestaurant.CreateRestaurant(appCtx))
 
