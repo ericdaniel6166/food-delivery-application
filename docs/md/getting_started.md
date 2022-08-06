@@ -6,6 +6,12 @@
 
 DBConnectionStr=postgresql://root:123456789@localhost:5432/food_delivery?sslmode=disable
 
+JwtExpirationInSeconds=90
+
+Version=v1
+
+SystemSecretKey=SystemSecretKey
+
 S3BucketName= Config by your aws account
 
 S3Region= Config by your aws account
