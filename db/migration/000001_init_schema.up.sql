@@ -1,14 +1,5 @@
 BEGIN;
 
-DO
-$$
-    BEGIN
-        IF NOT EXISTS(SELECT 1 FROM pg_type WHERE typname = 'role') THEN
-            create type role AS ENUM ('User','Shipper','Admin');
-        END IF;
-    END
-$$;
-
 create table if not exists users
 (
     id         serial
@@ -22,7 +13,7 @@ create table if not exists users
     last_name  varchar(50) not null,
     first_name varchar(50) not null,
     phone      varchar(20),
-    role       role      default 'User'::role,
+    role       varchar(50) not null,
     status     integer   default 1,
     avatar     json,
     created_at timestamp default now(),

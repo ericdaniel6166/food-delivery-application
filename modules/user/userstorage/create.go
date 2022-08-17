@@ -8,6 +8,7 @@ import (
 
 func (s *sqlStore) CreateUser(ctx context.Context, data *usermodel.UserCreate) error {
 	db := s.db.Begin()
+	data.PrepareForInsert()
 
 	if err := db.Table(data.TableName()).Create(data).Error; err != nil {
 		db.Rollback()

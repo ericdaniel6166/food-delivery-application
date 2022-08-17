@@ -36,8 +36,7 @@ func (biz *registerBiz) Register(ctx context.Context, data *usermodel.UserCreate
 
 		data.Password = biz.customHash.CustomHash(data.Password + genSalt)
 		data.Salt = genSalt
-		data.Role = common.User.String()
-		data.Status = 1
+		data.Role = common.RoleUser
 
 		if err := biz.registerStore.CreateUser(ctx, data); err != nil {
 			return common.ErrCannotCreateEntity(usermodel.EntityName, err)
