@@ -11,6 +11,7 @@ func (s *sqlStore) UpdateData(
 	id int,
 	data *restaurantmodel.RestaurantUpdate,
 ) error {
+	data.PrepareForUpdate()
 	db := s.db
 
 	if err := db.Where("id = ?", id).Updates(data).Error; err != nil {

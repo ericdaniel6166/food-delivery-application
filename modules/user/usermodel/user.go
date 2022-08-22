@@ -14,7 +14,7 @@ type User struct {
 	Salt            string         `json:"-" gorm:"column:salt;"`
 	LastName        string         `json:"last_name" gorm:"column:last_name;"`
 	FirstName       string         `json:"first_name" gorm:"column:first_name;"`
-	Phone           string         `json:"phone" gorm:"column:phone;"`
+	Phone           string         `json:"phone,omitempty" gorm:"column:phone;"`
 	Role            common.AppRole `json:"role" gorm:"column:role;"`
 	Avatar          *common.Image  `json:"avatar,omitempty" gorm:"column:avatar;type:json"`
 	IsOnline        bool           `json:"is_online" gorm:"-"`

@@ -7,7 +7,7 @@ import (
 type SQLModel struct {
 	Id        int        `json:"-" gorm:"primaryKey;column:id"`
 	FakeId    *UID       `json:"id" gorm:"-"`
-	Status    int        `json:"status" gorm:"column:status;default:1"`
+	Status    bool       `json:"status" gorm:"column:status;default:true"`
 	CreatedAt *time.Time `json:"created_at" gorm:"column:created_at;"`
 	UpdatedAt *time.Time `json:"updated_at" gorm:"column:updated_at;"`
 }
@@ -20,12 +20,13 @@ func (sqlModel *SQLModel) GenUID(dbType int) {
 func (sqlModel *SQLModel) PrepareForInsert() {
 	now := time.Now().UTC()
 	sqlModel.Id = 0
-	sqlModel.Status = 1
+	sqlModel.Status = true
 	sqlModel.CreatedAt = &now
 	sqlModel.UpdatedAt = &now
 }
 
 func (sqlModel *SQLModel) PrepareForUpdate() {
+	sqlModel.Id = 0
 	now := time.Now().UTC()
 	sqlModel.UpdatedAt = &now
 }
