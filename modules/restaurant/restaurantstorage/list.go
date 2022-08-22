@@ -19,23 +19,26 @@ func (s *sqlStore) ListDataByCondition(
 
 	db := s.db
 
-	for i := range moreKeys {
-		db = db.Preload(moreKeys[i])
-
-	}
-
 	db = db.Table(restaurantmodel.Restaurant{}.TableName()).Where(conditions).Where("status in (1)")
-	if v := filter; v != nil {
-		if v.CityId > 0 {
-			db = db.Where("city_id = ?", v.CityId)
-
+	if filter != nil {
+		if filter.CityId > 0 {
+			db = db.Where("city_id = ?", filter.CityId)
 		}
-
 	}
 
 	if err := db.Count(&paging.Total).Error; err != nil {
 		return nil, common.ErrDB(err)
+	}
 
+	for i := range moreKeys {
+		db = db.Preload(moreKeys[i])
+
+		//if key User in different microservice, call api
+		//https://github.com/go-resty/resty
+		//if moreKeys[i] == "User" {
+		////s.userStore.FindUsersByIds()
+		////...
+		//}
 	}
 
 	if fakeCursor := paging.FakeCursor; fakeCursor != "" {

@@ -2,7 +2,10 @@ package usermodel
 
 import "food-delivery-application/common"
 
-const EntityName = "User"
+const (
+	EntityName = "User"
+	TableName  = "users"
+)
 
 type User struct {
 	common.SQLModel `json:",inline"`
@@ -30,7 +33,7 @@ func (u *User) GetRole() string {
 }
 
 func (User) TableName() string {
-	return "users"
+	return TableName
 }
 
 func (u *User) Mask(isAdmin bool) {

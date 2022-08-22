@@ -28,7 +28,6 @@ func NewAppContext(db *gorm.DB, upProvider uploadprovider.UploadProvider, secret
 
 func (ctx *appCtx) GetMainDBConnection() *gorm.DB {
 	return ctx.db
-
 }
 
 func (ctx *appCtx) UploadProvider() uploadprovider.UploadProvider {
