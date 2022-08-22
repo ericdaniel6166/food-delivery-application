@@ -46,7 +46,7 @@ func (repo *listRestaurantRepo) ListRestaurant(
 
 	}
 
-	result, err := repo.store.ListDataByCondition(ctx, nil, filter, paging, order)
+	result, err := repo.store.ListDataByCondition(ctx, nil, filter, paging, order, "User")
 
 	if err != nil {
 		return nil, common.ErrCannotListEntity(restaurantmodel.EntityName, err)

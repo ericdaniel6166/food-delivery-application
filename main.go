@@ -5,6 +5,7 @@ import (
 	"food-delivery-application/component/uploadprovider"
 	"food-delivery-application/middleware"
 	"food-delivery-application/modules/restaurant/restauranttransport/ginrestaurant"
+	ginrestaurantlike "food-delivery-application/modules/restaurantlike/restaurantliketransport/ginrestaurantlike"
 	"food-delivery-application/modules/upload/uploadtransport/ginupload"
 	"food-delivery-application/modules/user/usertransport/ginuser"
 	"github.com/gin-gonic/gin"
@@ -81,6 +82,8 @@ func runService(appCtx component.AppContext) error {
 		restaurants.DELETE("/:id", ginrestaurant.DeleteRestaurant(appCtx))
 
 		restaurants.GET("/:id", ginrestaurant.GetRestaurant(appCtx))
+
+		restaurants.GET("/:id/liked-users", ginrestaurantlike.ListUsersLikeRestaurant(appCtx))
 
 	}
 
