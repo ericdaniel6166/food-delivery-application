@@ -6,9 +6,12 @@ import (
 	"time"
 )
 
-const EntityName = "RestaurantLike"
+const (
+	EntityName = "RestaurantLike"
+	TableName  = "restaurant_likes"
+)
 
-type Like struct {
+type RestaurantLike struct {
 	RestaurantId int                `json:"restaurant_id" gorm:"column:restaurant_id;"`
 	UserId       int                `json:"user_id" gorm:"column:user_id;"`
 	User         *common.SimpleUser `json:"user" gorm:"preload:false"`
@@ -20,13 +23,13 @@ type LikedCount struct {
 	LikeCount    int `gorm:"column:count;"`
 }
 
-func (Like) TableName() string { return "restaurant_likes" }
+func (RestaurantLike) TableName() string { return TableName }
 
-func (restaurantLike *Like) GetRestaurantId() int {
+func (restaurantLike *RestaurantLike) GetRestaurantId() int {
 	return restaurantLike.RestaurantId
 }
 
-func (restaurantLike *Like) GetUserId() int {
+func (restaurantLike *RestaurantLike) GetUserId() int {
 	return restaurantLike.UserId
 }
 

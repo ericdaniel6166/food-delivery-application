@@ -44,7 +44,7 @@ create table if not exists restaurants
         constraint restaurants_pk
             primary key,
     user_id             bigint,
-    like_count          bigint,
+    like_count          bigint                   default 0,
     name                varchar(255) not null,
     address             varchar(255) not null,
     city_id             bigint,

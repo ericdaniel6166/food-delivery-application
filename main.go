@@ -39,6 +39,8 @@ func main() {
 
 	appCtx := component.NewAppContext(db, s3Provider, secretKey, version, jwtExpirationInSeconds)
 
+	db = db.Debug()
+
 	if err := runService(appCtx); err != nil {
 		log.Fatalln(err)
 	}
@@ -62,7 +64,6 @@ func runService(appCtx component.AppContext) error {
 	auth := v.Group("/auth")
 	{
 		auth.POST("/register", ginuser.Register(appCtx))
-
 		auth.POST("/login", ginuser.Login(appCtx))
 	}
 
@@ -71,19 +72,17 @@ func runService(appCtx component.AppContext) error {
 		user.GET("/profile", ginuser.GetProfile(appCtx))
 	}
 
-	restaurants := v.Group("/restaurants", middleware.RequiredAuth(appCtx))
+	restaurants := v.Group("/restaurant", middleware.RequiredAuth(appCtx))
 	{
 		restaurants.POST("", ginrestaurant.CreateRestaurant(appCtx))
-
 		restaurants.GET("", ginrestaurant.ListRestaurant(appCtx))
-
 		restaurants.PATCH("/:id", ginrestaurant.UpdateRestaurant(appCtx))
-
 		restaurants.DELETE("/:id", ginrestaurant.DeleteRestaurant(appCtx))
-
 		restaurants.GET("/:id", ginrestaurant.GetRestaurant(appCtx))
 
 		restaurants.GET("/:id/liked-users", ginrestaurantlike.ListUsersLikeRestaurant(appCtx))
+		restaurants.POST("/:id/like", ginrestaurantlike.UserLikeRestaurant(appCtx))
+		restaurants.DELETE("/:id/unlike", ginrestaurantlike.UserUnlikeRestaurant(appCtx))
 
 	}
 
