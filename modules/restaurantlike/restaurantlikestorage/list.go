@@ -14,7 +14,7 @@ func (s *sqlStore) GetRestaurantLikes(ctx context.Context, ids []int) (map[int]i
 
 	var listLike []restaurantlikemodel.LikedCount
 
-	if err := s.db.Table(restaurantlikemodel.Like{}.TableName()).
+	if err := s.db.Table(restaurantlikemodel.RestaurantLike{}.TableName()).
 		Select("restaurant_id, count(restaurant_id) as count").
 		Where("restaurant_id in (?)", ids).
 		Group("restaurant_id").Find(&listLike).Error; err != nil {
@@ -36,11 +36,11 @@ func (s *sqlStore) GetUsersLikeRestaurant(
 	order *common.Order,
 	moreKeys ...string,
 ) ([]common.SimpleUser, error) {
-	var restaurantLikes []restaurantlikemodel.Like
+	var restaurantLikes []restaurantlikemodel.RestaurantLike
 
 	db := s.db
 
-	db = db.Table(restaurantlikemodel.Like{}.TableName()).Where(conditions)
+	db = db.Table(restaurantlikemodel.RestaurantLike{}.TableName()).Where(conditions)
 	if filter != nil {
 		if filter.RestaurantId > 0 {
 			db = db.Where("restaurant_id = ?", filter.RestaurantId)

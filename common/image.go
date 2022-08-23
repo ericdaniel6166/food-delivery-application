@@ -5,15 +5,18 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"time"
 )
 
 type Image struct {
-	Id        int    `json:"id" gorm:"column:id"`
-	Url       string `json:"url" gorm:"column:url"`
-	Width     int    `json:"width" gorm:"column:width"`
-	Height    int    `json:"height" gorm:"column:height"`
-	CloudName string `json:"cloud_name,omitempty" gorm:"-"`
-	Extension string `json:"extension,omitempty" gorm:"-"`
+	Id        int        `json:"id,omitempty" gorm:"column:id"`
+	CreatedAt *time.Time `json:"created_at,omitempty" gorm:"column:created_at;"`
+	UpdatedAt *time.Time `json:"updated_at,omitempty" gorm:"column:updated_at;"`
+	Url       string     `json:"url,omitempty" gorm:"column:url"`
+	Width     int        `json:"width,omitempty" gorm:"column:width"`
+	Height    int        `json:"height,omitempty" gorm:"column:height"`
+	CloudName string     `json:"cloud_name,omitempty" gorm:"-"`
+	Extension string     `json:"extension,omitempty" gorm:"-"`
 }
 
 func (Image) TableName() string {

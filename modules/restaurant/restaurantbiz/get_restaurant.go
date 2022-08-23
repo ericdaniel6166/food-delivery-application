@@ -37,7 +37,7 @@ func (biz *getRestaurantBiz) GetRestaurant(
 		return nil, err
 	}
 
-	if data.Status == 0 {
+	if data.Status == false {
 		return nil, common.ErrEntityDeleted(restaurantmodel.EntityName, nil)
 	}
 

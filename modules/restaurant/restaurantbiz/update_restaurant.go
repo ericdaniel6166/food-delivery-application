@@ -40,7 +40,7 @@ func (biz *updateRestaurantBiz) UpdateRestaurant(
 
 	}
 
-	if oldData.Status == 0 {
+	if oldData.Status == false {
 		return errors.New("data deleted")
 	}
 

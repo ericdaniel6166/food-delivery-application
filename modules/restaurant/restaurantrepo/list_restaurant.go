@@ -4,7 +4,6 @@ import (
 	"context"
 	"food-delivery-application/common"
 	"food-delivery-application/modules/restaurant/restaurantmodel"
-	"log"
 )
 
 type ListRestaurantStore interface {
@@ -40,35 +39,12 @@ func (repo *listRestaurantRepo) ListRestaurant(
 	paging *common.Paging,
 	order *common.Order,
 ) ([]restaurantmodel.Restaurant, error) {
-
 	if err := order.Validate(); err != nil {
 		return nil, err
-
 	}
-
 	result, err := repo.store.ListDataByCondition(ctx, nil, filter, paging, order, "User")
-
 	if err != nil {
 		return nil, common.ErrCannotListEntity(restaurantmodel.EntityName, err)
 	}
-
-	ids := make([]int, len(result))
-
-	for i := range result {
-		ids[i] = result[i].Id
-	}
-
-	mapResLike, err := repo.likeStore.GetRestaurantLikes(ctx, ids)
-
-	if err != nil {
-		log.Println("Cannot get restaurant likes:", err)
-	}
-
-	if v := mapResLike; v != nil {
-		for i, item := range result {
-			result[i].LikedCount = mapResLike[item.Id]
-		}
-	}
-
 	return result, nil
 }
