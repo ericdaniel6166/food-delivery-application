@@ -8,6 +8,8 @@ import (
 	ginrestaurantlike "food-delivery-application/modules/restaurantlike/restaurantliketransport/ginrestaurantlike"
 	"food-delivery-application/modules/upload/uploadtransport/ginupload"
 	"food-delivery-application/modules/user/usertransport/ginuser"
+	"food-delivery-application/pubsub/pblocal"
+	"food-delivery-application/subscriber"
 	"github.com/gin-gonic/gin"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -37,7 +39,7 @@ func main() {
 		log.Fatalln(err)
 	}
 
-	appCtx := component.NewAppContext(db, s3Provider, secretKey, version, jwtExpirationInSeconds)
+	appCtx := component.NewAppContext(db, s3Provider, secretKey, version, jwtExpirationInSeconds, pblocal.NewPubSub())
 
 	db = db.Debug()
 
@@ -47,6 +49,11 @@ func main() {
 }
 
 func runService(appCtx component.AppContext) error {
+	//subscriber.Setup(appCtx)
+	if err := subscriber.NewEngine(appCtx).Start(); err != nil {
+		log.Fatalln(err)
+	}
+
 	r := gin.Default()
 
 	r.Use(middleware.Recover(appCtx))
