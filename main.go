@@ -70,15 +70,9 @@ func runService(appCtx component.AppContext) error {
 	v := r.Group(appCtx.Version())
 
 	v.GET("/ping", func(c *gin.Context) {
-		//var user common.AppRole = 1
-		//
-		//fmt.Println()
-		//fmt.Println(common.AppRole.Scan(user))
-		//fmt.Println(time.Now().Format(common.TimeFormat))
 
 		c.JSON(http.StatusOK, gin.H{
 			"message": "pong",
-			//"message2": time.Now().Format(common.TimeFormat),
 		})
 	})
 
